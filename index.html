@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>封装浮动的小块</title>
+</head>
+<style>
+    body,html{
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .box1{
+        width: 200px;
+        height: 200px;
+        background: deepskyblue;
+        position: absolute;
+        top:0;
+        left: 0;
+    }
+    .box2{
+        width: 200px;
+        height: 200px;
+        background:deeppink;
+        border-radius: 50%;
+        position: absolute;
+        top:0;
+        left: 300px;
+    }
+</style>
+<body>
+    <div class="box1"></div>
+    <div class="box2"></div>
+</body>
+</html>
+<script>
+    //面向对象的方法
+    let box1=document.querySelector(".box1");
+    let box2=document.querySelector(".box2");
+    // console.log(box1, box2);
+    function Float(obj) {
+        this.element=obj;
+        this.speedX=20;
+        this.speedY=20;
+        this.maxWidth=innerWidth-this.element.offsetWidth;
+        this.maxHeight=innerHeight-this.element.offsetHeight;
+    }
+    Float.prototype={
+        play:function () {
+            let that=this;
+            setInterval(function () {
+                let tops=that.element.offsetTop+that.speedY;
+                let lefts=that.element.offsetLeft+that.speedX;
+                if (that.maxWidth<=lefts){
+                    that.speedX*=-1;
+                } else if(lefts<=0){
+                    that.speedX*=-1;
+                }if(that.maxHeight<=tops){
+                    that.speedY*=-1;
+                }else if (tops<=0){
+                    that.speedY*=-1;
+                }
+                that.element.style.top=tops+"px";
+                that.element.style.left=lefts+"px";
+            },50);
+        },
+        resize:function() {
+            this.maxWidth=innerWidth-this.element.offsetWidth;
+            this.maxHeight=innerHeight-this.element.offsetHeight;
+        },
+        }
+
+    let float1=new Float(box1);
+    let float2=new Float(box2);
+    float1.play();
+    window.onresize=function(){
+        float1.resize();
+        float2.resize();
+        console.log(innerHeight, innerWidth);
+
+    }
+    float2.play();
+</script>
